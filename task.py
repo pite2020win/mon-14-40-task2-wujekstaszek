@@ -1,24 +1,31 @@
-#
-#Flight simulator. 
-#Write a code in python that simulates the tilt correction of the plane (angle between plane wings and earth). 
-#The program should print out current orientation, and applied tilt correction.
-# (Tilt is "Roll" in this diagram https://www.novatel.com/assets/Web-Phase-2-2012/Solution-Pages/AttitudePlane.png)
-#The program should run in infinite loop, until user breaks the loop. 
-#Assume that plane orientation in every new simulation step is changing with random angle with gaussian distribution (the planes is experiencing "turbuence"). 
-# Hint: "random.gauss(0, 2*rate_of_correction)"
-#With every simulation step the orentation should be corrected, correction should be applied and printed out.
-#Try to expand your implementation as best as you can. 
-#Think of as many features as you can, and try implementing them.
-#
-#Try to expand your implementation as best as you can. 
-#Think of as many features as you can, and try implementing them.
-#Make intelligent use of pythons syntactic sugar (overloading, iterators, generators, etc)
-#Most of all: CREATE GOOD, RELIABLE, READABLE CODE.
-#The goal of this task is for you to SHOW YOUR BEST python programming skills.
-#Impress everyone with your skills, show off with your code.
-#
-#Your program must be runnable with command "python task.py".
-#Show some usecases of your library in the code (print some things)
-#Delete these comments before commit!
-#
-#Good luck.
+
+import random
+class plane:
+  def __init__(self,name="AirCraft",target=(0,0,0)):
+    self.name=name
+    self.orientation=[0,0,0]
+    self.target=target
+  def do_correction(self):
+    i=0
+    changed=[]
+    length=len(self.orientation)
+    while i<length:
+      change = (self.target[i] - self.orientation[i])*0.2
+      self.orientation[i]+=change
+      i+=1
+      changed.append(change)
+    return changed
+
+
+if __name__ == "__main__":
+  flyingMachine1 = plane("Boening 404",[10,1,5])
+  while 1:
+    orientation=flyingMachine1.orientation
+    correction=flyingMachine1.do_correction()
+    target=flyingMachine1.target
+    print(f'Current Orientation: {orientation},\ncorrection: {correction},\ntarget orientation:{target}')
+    i=0
+    while i<len(flyingMachine1.orientation): #turbulences
+      flyingMachine1.orientation[i]+= random.gauss(-0.5, 0.5)
+      i+=1
+    print(f'Orientation after turbulences:{flyingMachine1.orientation}\n')
