@@ -1,31 +1,39 @@
 
 import random
-class plane:
-  def __init__(self,name="AirCraft",target=(0,0,0)):
-    self.name=name
-    self.orientation=[0,0,0]
-    self.target=target
-  def do_correction(self):
-    i=0
-    changed=[]
-    length=len(self.orientation)
-    while i<length:
-      change = (self.target[i] - self.orientation[i])*0.2
-      self.orientation[i]+=change
-      i+=1
-      changed.append(change)
-    return changed
+from plane import plane
+from environment import environment
+import logging
+import time
+
+
+
 
 
 if __name__ == "__main__":
-  flyingMachine1 = plane("Boening 404",[10,1,5])
-  while 1:
-    orientation=flyingMachine1.orientation
-    correction=flyingMachine1.do_correction()
-    target=flyingMachine1.target
-    print(f'Current Orientation: {orientation},\ncorrection: {correction},\ntarget orientation:{target}')
-    i=0
-    while i<len(flyingMachine1.orientation): #turbulences
-      flyingMachine1.orientation[i]+= random.gauss(-0.5, 0.5)
-      i+=1
-    print(f'Orientation after turbulences:{flyingMachine1.orientation}\n')
+  flying_machine1 = plane(0.9,"Boening 404")
+  flying_machine2 = plane(0.5,"Unit Under Test 1")
+  flying_machine3 = plane(0.0,"No Need Of Correction Plane")
+  planes_under_test = [flying_machine1, flying_machine2, flying_machine3]
+
+  period = 0.1
+  time_stamps = 2000
+
+
+  test_environment = environment(period,planes_under_test)
+
+  file_logger = logging.getLogger("Data Logger")
+  logging.basicConfig(filename='data.log',filemode='w', level=logging.INFO)
+
+  print("Starting simulation\n")
+
+  print("Logging simulation data, please wait...")
+  env_info=[]
+  for i in range(time_stamps):
+    env_info += test_environment.next_time_stamp()
+
+  for info in env_info:
+    logging.info(info)
+
+
+
+  print("\nEnding simulation")
